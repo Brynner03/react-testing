@@ -14,8 +14,10 @@ test('App should render', () => {
 });
 
 test('Button should render', () => {
-  // TODO: change the expect to actually test something 😉
-  expect('no test written').toBe('tested');
+  render(<App />);
+
+  const button = screen.getByText('Current theme: light');
+  expect(button).toBeInTheDocument();
 });
 
 /**
@@ -23,16 +25,38 @@ test('Button should render', () => {
  * hint: use fireEvent.click(element) to trigger a click event on an element
  */
 test('theme button should update button text', () => {
-  // TODO: change the expect to actually test something 😉
-  expect('no test written').toBe('tested');
+  render(<App />);
+
+  // Get the "Toggle Theme" button
+  const button = screen.getByText('Current theme: light');
+
+  fireEvent.click(button);
+
+  expect(button).toHaveTextContent('Current theme: dark');
+
+  fireEvent.click(button);
+
+  expect(button).toHaveTextContent('Current theme: light');
 });
 
 // BONUS
 // hint: there is a `.toHaveStyle` method.
 // e.g.: expect(element).toHaveStyle('color: #FFF');
 test('theme button should toggle styles', () => {
-  // TODO: change the expect to actually test something 😉
-  expect('no test written').toBe('tested');
+  render(<App />);
+
+  // Get the body element to check styles
+  const bodyElement = document.body;
+
+  expect(bodyElement).toHaveStyle('color: #333');
+  expect(bodyElement).toHaveStyle('background-color: #FFF');
+
+  const button = screen.getByText('Current theme: light');
+
+  fireEvent.click(button);
+
+  expect(bodyElement).toHaveStyle('color: #FFF');
+  expect(bodyElement).toHaveStyle('background-color: #333');
 });
 
 /**
@@ -45,14 +69,18 @@ test('theme button should toggle styles', () => {
  * (getByText will throw an error if it is not rendered)
  */
 test('hidden button should toggle hidden content', () => {
-  // TODO: change the expect to actually test something 😉
-  expect('no test written').toBe('tested');
+  render(<App />);
+
+  // Initially, the hidden content should not be visible
+  expect(screen.queryByText('this content is hidden by default')).not.toBeInTheDocument();
+
+  const hiddenButton = screen.getByText('Show hidden content');
+
+  fireEvent.click(hiddenButton);
+
+  expect(screen.getByText('this content is hidden by default')).toBeInTheDocument();
+
+  fireEvent.click(hiddenButton);
+
+  expect(screen.queryByText('this content is hidden by default')).not.toBeInTheDocument();
 });
-
-
-/**
- * Want more? Try these:
- *   - check for the presence of a specific element, like the paragraph containing the text "Click the button to toggle the theme"
- *   - check the for the class name .container on the surrounding div
- *   - after clicking the toggle hidden content button, check for the button text to update to "hide" instead of "show"
- */
